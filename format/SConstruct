@@ -1,0 +1,52 @@
+#Enviroment Madagascar
+
+rsfsrc='/home/sherphys/rsfsrc'
+import os, sys, re, string
+sys.path.append(rsfsrc + '/framework')
+import bldutil
+
+#Main progs
+
+progs = '''
+format
+'''
+#C++, Python, Anexos de Python, Cuda, Fortran 
+#ccprogs = ''
+
+#pyprogs = ''
+#pymods = ''
+
+#cudaprogs = ''
+
+# f90progs = ''
+
+
+try:  # distributed version
+    Import('env root pkgdir bindir')
+    env = env.Clone()
+except: # local version
+    env = bldutil.Debug()
+    root = None
+    SConscript(rsfsrc +'/api/c/SConstruct')
+
+env.Prepend(CPPPATH=[rsfsrc + '/include'],
+            LIBPATH=[rsfsrc + '/lib'],
+            LIBS=[env.get('DYNLIB','')+'rsf','gsl','gslcblas'])
+
+
+src = Glob('[a-z]*.c')
+
+for source in src:
+    inc = env.RSF_Include(source,prefix='')
+    obj = env.StaticObject(source)
+    env.Depends(obj,inc)
+
+# Regular progams
+mains = Split(progs)
+for prog in mains:
+    sources = ['M' + prog]
+    bldutil.depends(env,sources,'M'+prog)
+    prog = env.Program(prog,map(lambda x: x + '.c',sources))
+    if root:
+        env.Install(bindir,prog)
+
