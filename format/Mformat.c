@@ -102,7 +102,7 @@ int main (int argc, char* argv[])
 		
 		  seg4= (float) ( 1.0*(1.0*ts5.tv_nsec - ts4.tv_nsec*1.0)*1e-9 + 1.0*ts5.tv_sec - 1.0*ts4.tv_sec );
 		
-		  sf_warning("%.0f %e %e %e %e", densy*100,seg,seg2,seg3,seg4);
+		  sf_warning("%.0f %d %e %e %e %e", densy*100,nz,seg,seg2,seg3,seg4);
 		  
 		  nz=0; nz2=0; nz3=0;
 		  for(i=0;i<Nx*Nz;i++) A[i]= 0.0;
