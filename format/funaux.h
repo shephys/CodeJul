@@ -7,14 +7,64 @@
 #define Id(v,i,j) v[(i)*(Nz)+(j)] 
 
 
-typedef struct msr *MSR;
+typedef struct msr MSR;
+
+
+typedef struct csr CSR;
+
+
+typedef struct coo COO;
+
+
+struct msr{
+	float *AA;
+	int *JA;
+};
+
+
+struct csr{
+	float *AA;
+	int *JA;
+	int *IA;
+};
+
+
+struct coo{
+	float *AA;
+	int *JR;
+	int *JC;
+};
 
 
 void sparserand (float *A, float densy, int Nx, int Nz, int a, int b);
 /*< Sparse Matrix >*/
 
 
-int formatMSR(float *A, int Nx, int Nz, MSR sparse);
+int formatMSR(float *A, int Nx, int Nz, MSR *sparse);
 /*< Sparse Matrix in MSR>*/
+
+
+void mulMsrVec(MSR sparse, float *V, float *R, int Nx, int nz);
+/*< Sparse Matrix MSR Vector>*/
+
+
+int formatCSR(float *A, int Nx, int Nz, CSR *sparse);
+/*< Sparse Matrix CSR>*/
+
+
+void mulCsrVec(CSR sparse, float *V, float *R, int Nx, int nz);
+/*< Sparse Matrix CSR Vector>*/
+
+
+int formatCOO(float *A, int Nx, int Nz, COO *sparse);
+/*< Sparse Matrix COO>*/
+
+
+void mulCooVec(COO sparse, float *V, float *R, int Nx, int nz);
+/*< Sparse Matrix COO Vector>*/
+
+
+void mulAVec(float *A, float *V, float *R, int Nx, int Nz);
+/*<Matrix Vector>*/
 
 #endif
