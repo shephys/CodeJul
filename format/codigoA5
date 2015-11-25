@@ -1,0 +1,89 @@
+// Encabezado con funciones para formato MSC – msc.h
+
+Fichero: msc.h -> Sparse Matrices stored in Modified Sparse Column format.
+Funciones para trabajar matrices dispersas
+almacenadas en formato de columna comprimida modificado (MSC).
+Por: Juan David Jaramillo J.
+
+#ifndef MSC_H
+#define MSC_H
+
+typedef struct msc MSC;
+
+  struct msc{
+		double* AA;
+		int* IA;
+	};
+
+//Convertir una matriz a MSC
+
+int fcn_mat2msc(double* A[], int size, MSC*sparse){
+
+	int i,j;
+	for(i=0; i < size ; i++){
+	sparse->AA[i]=A[i][i];
+	}
+	
+	sparse->AA[size]=-1;
+	int cont=size+1;
+	for(j=0; j < size ; j++){
+		sparse->IA[j]=cont;
+		for(i=0; i<size; i++){
+		if((A[i][j]!=0)&&(i!=j)){
+			sparse->AA[cont]=A[i][j];
+			sparse->IA[cont]=i;
+			cont++;
+			}
+	}
+	  }
+	  sparse->IA[size]=cont;
+	  return cont;	
+	}	  	
+
+//Convertir de MSC a Matriz
+
+double ** fcn_msc2mat(int size, int nz, MSC sparse){
+	int i,j;
+	double **A;
+	A = (double **)malloc(size*sizeof(double*));
+	for(i=0;i<size;i++){
+		A[i] = (double *)malloc(size*sizeof(double));
+	}
+	for(i=0; i < size ; i++){
+		A[i][i]=sparse.AA[i];
+		}
+		i=0;
+		for(j=size+1; j < nz; j++){
+	while(sparse.IA[i+1]==j)
+		i++;
+	A[sparse.IA[j]][i] = sparse.AA[j];
+	}
+	return A;
+ }
+	
+//Producto Matriz-Vector
+	double * fcn_mulMscVec(MSC sparse, doubleV[], int size, int nz){
+	int i,j;
+	double *R;
+	R = (double *)malloc(size*sizeof(double));
+	for(i=0; i < size; i++){
+		R[i] = V[i] * sparse.AA[i];
+	}
+	i=0;
+	for(j=size+1; j < nz; j++){
+ while(sparse.IA[i+1]==j)
+		i++;
+ R[sparse.IA[j]] += (V[i] * sparse.AA[j]);
+	}
+	return R;
+ }
+ 
+//Imprimir componentes de matriz MSC
+ void fcn_printMsc(MSC sparse, int nz){
+	int i;
+	for(i=0;i<nz;i++){
+	printf(“AA: %lf \tIA: %d\n”,sparse.AA[i],sparse.IA[i]);
+	}
+ }
+ #endif
+ 

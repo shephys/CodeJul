@@ -1,0 +1,99 @@
+//Encabezado con funciones para formato MSR – msr.h
+
+Fichero: msr.h -> Sparse Matrices stored in Modifi ed Sparse Row format.
+Funciones para trabajar matrices dispersas 
+almacenadas en formato de fila comprimida modifiado (MSR).
+Por: Juan David Jaramillo J.
+
+#ifndef MSR_H
+#define MSR_H
+
+
+typedef struct msr MSR;
+
+	struct msr{
+	double* AA;
+	int* JA;
+ };
+ 
+ //Convertir una matriz a MSR
+ 
+int fcn_mat2msr(double* A[], int size, MSR*sparse){
+	int i,j;
+	for(i=0; i < size ; i++){
+		sparse->AA[i]=A[i][i];
+	}
+	
+	sparse->AA[size]=-1;
+	int cont=size+1;
+	for(i=0; i < size ; i++){
+		sparse->JA[i]=cont;
+		for(j=0; j<size; j++){
+		if((A[i][j]!=0)&&(i!=j)){
+			sparse->AA[cont]=A[i][j];
+			sparse->JA[cont]=j;
+			cont++;
+		}
+	}
+  }
+  
+ sparse->JA[size]=cont;
+ return cont;
+ }
+ 
+ //Convertir de MSR a Matriz
+ 
+ double ** fcn_msr2mat(int size, int nz, MSRsparse){
+	int i,j;
+	double **A;
+	A = (double **)malloc(size*sizeof(double*));
+	for(i=0;i<size;i++){
+	A[i] = (double *)malloc(size*sizeof(double));
+	}
+	for(j=0; j < size ; j++){
+		A[j][j]=sparse.AA[j];
+	}
+	j=0;
+	for(i=size+1; i < nz; i++){
+		while(sparse.JA[j+1]==i)
+			j++;
+			A[j][sparse.JA[i]] = sparse.AA[i];
+		}
+		return A;
+	}
+	
+	
+//Producto Matriz-Vector
+
+
+double * fcn_mulMsrVec(MSR sparse, doubleV[], int size, int nz){
+	int i,j;
+	double *R;
+	R = (double *)malloc(size*sizeof(double));
+	for(i=0; i < size; i++){
+		R[i]= V[i] * sparse.AA[i];
+	}
+	j=0;
+	for(i=size+1; i < nz; i++){
+ while(sparse.JA[j+1]==i)
+		j++;
+		R[j] += (V[sparse.JA[i]] * sparse.AA[i]);
+	}
+	return R;
+ }
+ 
+//Imprimir componentes de matriz MSR
+void fcn_printMsr(MSR sparse, int nz){
+	int i;
+	for(i=0;i<nz;i++){
+	printf(“AA: %lf \tJA: %d\n”,sparse.AA[i],sparse.JA[i]);
+	}
+ }
+  
+#endif
+
+
+		
+			
+		
+ 

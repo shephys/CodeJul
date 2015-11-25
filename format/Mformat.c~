@@ -22,7 +22,7 @@ int main (int argc, char* argv[])
     int Nx, Nz;
 	  float densy; 
     float *A=NULL, *AT=NULL;    
-		MSR sparse=NULL;		
+		MSR *sparse=NULL;		
 		//float *sparseAA=NULL;
 		//int *sparseJA=NULL;
 

@@ -75,7 +75,7 @@ int formatMSR(float *A, int Nx, int Nz, MSR sparse)
 	for(i=0;i<Nx;i++)
 	{
 			sf_warning("%f",Id(A,i,i));
-			sparse->AA[i]= Id(A,i,i);
+			sparse->AA[i]=Id(A,i,i);
 			//sparse->AA[i]=1.0;
 	}	
  	
